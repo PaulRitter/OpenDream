@@ -2135,6 +2135,14 @@ namespace DMCompiler.Compiler.DM {
                 }
             }
 
+            if (expression is DMASTGlobalIdentifier sleepIdent && sleepIdent.Identifier == "sleep" && Current().Type != TokenType.DM_LeftParenthesis) {
+                Whitespace(true);
+                var parameter = CallParameter() ?? new DMASTCallParameter(sleepIdent.Location,
+                    new DMASTConstantInteger(sleepIdent.Location, 0));
+                return new DMASTProcCall(sleepIdent.Location,
+                    new DMASTCallableGlobalProc(sleepIdent.Location, sleepIdent.Identifier), new[] { parameter });
+            }
+
             DMASTCallParameter[] callParameters = ProcCall();
             if (callParameters != null) {
                 if (expression is DMASTGlobalIdentifier gid) {
